@@ -1,5 +1,7 @@
 # noizee-vue3
 
+An port of [Noizee](https://github.com/pedroCX486/noizee) to Vue3. Not a complete port (doesn't have the universal mute button or CKEditor, I couldn't bother with that). Tried using the best practices for an application as simple as this.
+
 ## Project setup
 ```
 yarn install
@@ -14,6 +16,3 @@ yarn serve
 ```
 yarn build
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
