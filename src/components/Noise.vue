@@ -94,14 +94,4 @@ export default {
   margin-top: 2rem;
   animation: fadeInOpacity 600ms;
 }
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 300ms ease-in-out;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
 </style>

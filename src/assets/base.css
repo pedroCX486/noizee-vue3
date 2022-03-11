@@ -1,15 +1,4 @@
-/* :root {
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-  }
-} */
-
-.ck-editor__editable_inline {
-  min-height: 400px;
-}
-
+/* General */
 body {
   background-color: #121212;
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -18,12 +7,34 @@ body {
   color: lightgray;
 }
 
+/* CKEditor */
+.ck-editor__editable_inline {
+  min-height: 400px;
+}
+
+/* Inputs */
+input:focus {
+  outline: none;
+}
+
+/* Text */
 .text-1 {
   color: darkgrey;
 }
 
 a {
   color: darkgrey;
+}
+
+/* Animations */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 300ms ease-in-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 
 @keyframes fadeInOpacity {

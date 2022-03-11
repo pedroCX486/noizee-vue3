@@ -1,14 +1,23 @@
 <template>
-  <div class="modal">
-    <ckeditor
-      :editor="editor"
-      v-model="editorData"
-      :config="editorConfig"
-    ></ckeditor>
-  </div>
+  <Transition>
+    <div v-if="this.modalToggle" class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Text Editor</div>
+        <div>
+          <button @click="this.toggleModal()">Close</button>
+        </div>
+      </div>
+      <input v-model="editorTitle" type="text" class="editor-title" placeholder="Your title" />
+      <ckeditor :editor="editor" v-model="editorData"></ckeditor>
+      <div class="modal-footer">Functionality still under construction.</div>
+    </div>
+  </Transition>
 
   <header class="header">
     <img alt="Noizee" class="logo" src="./assets/logo.png" />
+    <div class="btn-editor-container">
+      <button @click="this.toggleModal()">Editor</button>
+    </div>
   </header>
 
   <main class="box-container">
@@ -27,16 +36,12 @@
     <br />
     <small class="text-1">
       Icons by
-      <a
-        target="_blank"
-        href="https://www.flaticon.com/br/autores/eucalyp"
-        title="Eucalyp"
-        >Eucalyp</a
-      >
+      <a target="_blank" href="https://www.flaticon.com/br/autores/eucalyp" title="Eucalyp">Eucalyp</a>
       <br />Developed by
       <a target="_blank" href="https://github.com/pedrocx486">pedroCX486</a>
       <br />
-      <br />Issues playing? Our sounds are in MP3 format. <br />Linux users may
+      <br />Issues playing? Our sounds are in MP3 format.
+      <br />Linux users may
       need to install extra codecs to play them.
     </small>
   </footer>
@@ -54,8 +59,9 @@ export default {
   data() {
     return {
       editor: ClassicEditor,
+      editorTitle: "",
       editorData: "<p>Content of the editor.</p>",
-      editorConfig: {},
+      modalToggle: false,
       soundList: [],
     };
   },
@@ -67,6 +73,9 @@ export default {
           this.soundList = data;
         });
     },
+    toggleModal() {
+      this.modalToggle = !this.modalToggle;
+    }
   },
   created() {
     this.getSoundList();
@@ -82,18 +91,6 @@ export default {
   height: auto;
 }
 
-.modal {
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  height: 60%;
-  width: 80%;
-  z-index: 2;
-  background-color: white;
-  border-radius: 5px;
-}
-
 .box-container {
   text-align: center;
   max-width: 40rem;
@@ -107,9 +104,60 @@ export default {
   animation: fadeInOpacity 600ms;
 }
 
+.btn-editor-container {
+  position: absolute;
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
 .footer {
   text-align: center;
   padding: 5px;
   animation: fadeInOpacity 600ms;
+}
+
+.editor-title {
+  border: none;
+  width: 97.9%;
+  padding: 0.5rem;
+  font-size: x-large;
+}
+
+.modal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  height: 60%;
+  width: 80%;
+  z-index: 2;
+  background-color: white;
+  border-radius: 5px;
+  margin-top: 2rem;
+}
+
+.modal-header {
+  height: 3rem;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  color: black;
+  border-bottom: solid 1px lightgray;
+}
+
+.modal-title {
+  font-size: x-large;
+  font-weight: 600;
+}
+
+.modal-footer {
+  background-color: white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 0.5rem;
+  color: black;
 }
 </style>
