@@ -1,4 +1,12 @@
 <template>
+  <div class="modal">
+    <ckeditor
+      :editor="editor"
+      v-model="editorData"
+      :config="editorConfig"
+    ></ckeditor>
+  </div>
+
   <header class="header">
     <img alt="Noizee" class="logo" src="./assets/logo.png" />
   </header>
@@ -7,7 +15,11 @@
     <Noise
       v-for="sound in soundList"
       :key="sound.screenname"
-      :sound="{ filename: sound.filename, screenname: sound.screenname, icon: sound.icon }"
+      :sound="{
+        filename: sound.filename,
+        screenname: sound.screenname,
+        icon: sound.icon,
+      }"
     />
   </main>
 
@@ -15,40 +27,51 @@
     <br />
     <small class="text-1">
       Icons by
-      <a target="_blank" href="https://www.flaticon.com/br/autores/eucalyp" title="Eucalyp">Eucalyp</a>
+      <a
+        target="_blank"
+        href="https://www.flaticon.com/br/autores/eucalyp"
+        title="Eucalyp"
+        >Eucalyp</a
+      >
       <br />Developed by
       <a target="_blank" href="https://github.com/pedrocx486">pedroCX486</a>
       <br />
-      <br />Issues playing? Our sounds are in MP3 format.
-      <br />Linux users may need to install extra codecs to play them.
+      <br />Issues playing? Our sounds are in MP3 format. <br />Linux users may
+      need to install extra codecs to play them.
     </small>
   </footer>
 </template>
 
 <script>
 import Noise from "./components/Noise.vue";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    Noise
+    Noise,
   },
   data() {
     return {
-      soundList: []
-    }
+      editor: ClassicEditor,
+      editorData: "<p>Content of the editor.</p>",
+      editorConfig: {},
+      soundList: [],
+    };
   },
   methods: {
     getSoundList() {
-      fetch("./assets/soundlist.json").then(response => response.json()).then(data => {
-        this.soundList = data;
-      });
-    }
+      fetch("./assets/soundlist.json")
+        .then((response) => response.json())
+        .then((data) => {
+          this.soundList = data;
+        });
+    },
   },
   created() {
     this.getSoundList();
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -57,6 +80,18 @@ export default {
 .logo {
   max-width: 60%;
   height: auto;
+}
+
+.modal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  height: 60%;
+  width: 80%;
+  z-index: 2;
+  background-color: white;
+  border-radius: 5px;
 }
 
 .box-container {
