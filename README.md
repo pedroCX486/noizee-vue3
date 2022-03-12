@@ -1,4 +1,4 @@
-# noizee-vue3
+# Noizee (Vue3 Port)
 
 An port of [Noizee](https://github.com/pedroCX486/noizee) to Vue3, which itself was an opensource alternative to Noisli. 
 
