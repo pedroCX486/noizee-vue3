@@ -35,7 +35,7 @@
           &nbsp;
           <button class="custom-btn btn-danger" @click="resetEditor()">Reset Editor</button>
           &nbsp;
-          Powered by QuillEditor.
+          <div class="powered-by">Powered by <a href="https://vueup.github.io/vue-quill/">QuillEditor</a>.</div>
         </div>
       </div>
     </Transition>
@@ -91,14 +91,16 @@ import Noise from "./components/Noise.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
-import { PencilOutline, CloseThick, VolumeOff } from 'mdue';
+import { PencilOutline, CloseThick, VolumeOff } from "mdue";
 
 export default {
   name: "App",
   components: {
     Noise,
     QuillEditor,
-    PencilOutline, CloseThick, VolumeOff
+    PencilOutline,
+    CloseThick,
+    VolumeOff,
   },
   data() {
     return {
@@ -122,7 +124,7 @@ export default {
       this.modalToggle = !this.modalToggle;
     },
     muteAll() {
-      alert("Not implemented yet.");
+      this.emitter.emit("mute");
     },
     storageSave() {
       this.showSaved = true;
@@ -204,7 +206,7 @@ export default {
 
 .btn-animated {
   transition: ease-in 300ms;
-  animation: fadein 600ms;  
+  animation: fadein 600ms;
 }
 
 .btn-editor-container {
@@ -291,6 +293,13 @@ export default {
   padding: 0.5rem;
   padding-top: 3rem;
   color: black;
+}
+
+.powered-by {
+  text-align: right;
+  position: absolute;
+  bottom: -6rem;
+  right: 1rem;
 }
 
 .saved-hint {

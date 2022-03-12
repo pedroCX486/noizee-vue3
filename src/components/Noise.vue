@@ -4,7 +4,7 @@
       <source v-bind:src="'./assets/sounds/' + this.sound.filename + '.mp3'" type="audio/mpeg" />
     </audio>
 
-    <div @click="this.audioControls(this.sound.filename)">
+    <div @click="this.audioControls()">
       <img v-bind:src="'./assets/icons/' + this.sound.icon" class="sound-icon" />
       <br />
       <div class="audio-info">
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { Play } from 'mdue';
+import { Play } from "mdue";
 
 export default {
   name: "Noise",
@@ -45,16 +45,15 @@ export default {
     };
   },
   methods: {
-    volumeControls(sound) {
-      document.getElementById(sound).volume = document.getElementById(
-        sound + "-volume"
-      ).value;
+    volumeControls() {
+      document.getElementById(this.sound.filename).volume =
+        document.getElementById(this.sound.filename + "-volume").value;
     },
-    audioControls(sound) {
-      const soundElement = document.getElementById(sound);
+    audioControls() {
+      const soundElement = document.getElementById(this.sound.filename);
 
       if (soundElement.paused) {
-        this.volumeControls(sound);
+        this.volumeControls();
         this.isPlaying = true;
         soundElement.play();
       } else {
@@ -62,6 +61,16 @@ export default {
         soundElement.pause();
       }
     },
+    mute() {
+      if (this.isPlaying) {
+        this.audioControls();
+      }
+    },
+  },
+  mounted() {
+    this.emitter.on("mute", () => {
+      this.mute();
+    });
   },
 };
 </script>
