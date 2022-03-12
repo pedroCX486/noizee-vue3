@@ -5,7 +5,7 @@
         <div class="modal-header">
           <div class="modal-title">Text Editor</div>
           <div>
-            <button @click="this.toggleModal()">Close</button>
+            <close-thick class="md-normal-icon-size btn-animated btn-close" @click="this.toggleModal()"></close-thick>
           </div>
         </div>
         <input
@@ -27,15 +27,15 @@
           <small>
             Content autosaves to the browser's local storage.
           <Transition>
-            <span class="saved" v-if="showSaved">Contents saved.</span>
+            <span class="saved-hint" v-if="showSaved">Contents saved.</span>
           </Transition>
           </small>
           <br/>
-          <button @click="printFromEditor()">Print to File/Printer</button>
+          <button class="custom-btn btn-info" @click="printFromEditor()">Print to File/Printer</button>
           &nbsp;
-          <button @click="resetEditor()">Reset Editor</button>
+          <button class="custom-btn btn-danger" @click="resetEditor()">Reset Editor</button>
           &nbsp;
-          Powered by QuillEditor. // Functionality still under construction.
+          Powered by QuillEditor.
         </div>
       </div>
     </Transition>
@@ -47,10 +47,10 @@
         src="./assets/logo.png"
       />
       <div class="btn-editor-container">
-        <button @click="this.toggleModal()">Editor</button>
+        <pencil-outline class="md-normal-icon-size btn-animated btn-editor" @click="this.toggleModal()"></pencil-outline>
       </div>
       <div class="btn-mute-container">
-        <button @click="this.muteAll()">Stop All Noises</button>
+        <volume-off class="md-normal-icon-size btn-animated btn-mute" @click="this.muteAll()"></volume-off>
       </div>
     </header>
 
@@ -70,18 +70,11 @@
       <br />
       <small class="text-1">
         Icons by
-        <a
-          target="_blank"
-          href="https://www.flaticon.com/br/autores/eucalyp"
-          title="Eucalyp"
-        >
+        <a target="_blank" href="https://www.flaticon.com/br/autores/eucalyp" title="Eucalyp">
           Eucalyp
         </a>
         <br />Developed by
-        <a
-          target="_blank"
-          href="https://github.com/pedrocx486"
-        >
+        <a target="_blank" href="https://github.com/pedrocx486">
           pedroCX486
         </a>
         <br />
@@ -98,11 +91,14 @@ import Noise from "./components/Noise.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
+import { PencilOutline, CloseThick, VolumeOff } from 'mdue';
+
 export default {
   name: "App",
   components: {
     Noise,
     QuillEditor,
+    PencilOutline, CloseThick, VolumeOff
   },
   data() {
     return {
@@ -206,10 +202,21 @@ export default {
   animation: fadeInOpacity 600ms;
 }
 
+.btn-animated {
+  transition: ease-in 300ms;
+  animation: fadein 600ms;  
+}
+
 .btn-editor-container {
   position: absolute;
   left: 0.5rem;
   top: 0.5rem;
+}
+
+.btn-editor:hover {
+  color: slateblue;
+  transition: ease-in 300ms;
+  cursor: pointer;
 }
 
 .btn-mute-container {
@@ -218,17 +225,16 @@ export default {
   top: 0.5rem;
 }
 
+.btn-mute:hover {
+  color: crimson;
+  transition: ease-in 300ms;
+  cursor: pointer;
+}
+
 .footer {
   text-align: center;
   padding: 5px;
   animation: fadeInOpacity 600ms;
-}
-
-.editor-title {
-  border: none;
-  width: 97.9%;
-  padding: 0.5rem;
-  font-size: x-large;
 }
 
 .modal {
@@ -256,9 +262,22 @@ export default {
   border-bottom: solid 1px lightgray;
 }
 
+.btn-close:hover {
+  color: crimson;
+  transition: ease-in 300ms;
+  cursor: pointer;
+}
+
 .modal-title {
   font-size: x-large;
   font-weight: 600;
+}
+
+.editor-title {
+  border: none;
+  width: 97.9%;
+  padding: 0.5rem;
+  font-size: x-large;
 }
 
 .modal-editor {
@@ -274,7 +293,7 @@ export default {
   color: black;
 }
 
-.saved {
-  color: lightgray;
+.saved-hint {
+  color: gray;
 }
 </style>

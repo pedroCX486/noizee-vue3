@@ -11,7 +11,7 @@
         <small class="text-1">{{ this.sound.screenname }}</small>&nbsp;
         <div class="playing-icon-box">
           <Transition>
-            <img v-if="this.isPlaying" v-bind:src="'./assets/icons/playing.svg'" class="playing-icon" />
+            <play v-if="this.isPlaying" class="playing-icon md-normal-icon-size"></play>
           </Transition>
         </div>
       </div>
@@ -31,8 +31,11 @@
 </template>
 
 <script>
+import { Play } from 'mdue';
+
 export default {
   name: "Noise",
+  components: { Play },
   props: {
     sound: { filename: "", screennanme: "", icon: "" },
   },
@@ -71,8 +74,9 @@ export default {
 
 .playing-icon-box {
   position: absolute;
-  right: -10px;
+  right: -15px;
   margin-left: 10px;
+  top: 2px;
 }
 
 .sound-icon {
@@ -82,8 +86,8 @@ export default {
 }
 
 .playing-icon {
-  width: 8px;
-  height: 8px;
+  width: 15px;
+  height: 15px;
   margin-bottom: 2px !important;
   opacity: 1;
 }
