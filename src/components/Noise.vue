@@ -32,18 +32,20 @@
 
 <script>
 export default {
-  name: 'Noise',
+  name: "Noise",
   props: {
-    sound: { filename: '', screennanme: '', icon: '' }
+    sound: { filename: "", screennanme: "", icon: "" },
   },
   data() {
     return {
-      isPlaying: false
-    }
+      isPlaying: false,
+    };
   },
   methods: {
     volumeControls(sound) {
-      document.getElementById(sound).volume = document.getElementById(sound + '-volume').value;
+      document.getElementById(sound).volume = document.getElementById(
+        sound + "-volume"
+      ).value;
     },
     audioControls(sound) {
       const soundElement = document.getElementById(sound);
@@ -56,12 +58,12 @@ export default {
         this.isPlaying = false;
         soundElement.pause();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<style scoped>
+<style>
 .audio-info {
   position: relative;
   display: inline-flex;

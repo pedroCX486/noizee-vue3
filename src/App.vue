@@ -1,68 +1,117 @@
 <template>
-  <Transition>
-    <div v-if="this.modalToggle" class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Text Editor</div>
-        <div>
-          <button @click="this.toggleModal()">Close</button>
+  <div id="app">
+    <Transition>
+      <div v-if="this.modalToggle" class="modal">
+        <div class="modal-header">
+          <div class="modal-title">Text Editor</div>
+          <div>
+            <button @click="this.toggleModal()">Close</button>
+          </div>
+        </div>
+        <input
+          v-model="editorTitle"
+          type="text"
+          class="editor-title"
+          placeholder="Your title"
+          @keydown="debounce(() => { storageSave(); })"
+        />
+        <div class="modal-editor">
+          <QuillEditor
+            v-model:content="editorContent"
+            contentType="html"
+            @keydown="debounce(() => { storageSave(); })"
+            theme="snow"
+          />
+        </div>
+        <div class="modal-footer">
+          <small>
+            Content autosaves to the browser's local storage.
+          <Transition>
+            <span class="saved" v-if="showSaved">Contents saved.</span>
+          </Transition>
+          </small>
+          <br/>
+          <button @click="printFromEditor()">Print to File/Printer</button>
+          &nbsp;
+          <button @click="resetEditor()">Reset Editor</button>
+          &nbsp;
+          Powered by QuillEditor. // Functionality still under construction.
         </div>
       </div>
-      <input v-model="editorTitle" type="text" class="editor-title" placeholder="Your title" />
-      <ckeditor :editor="editor" v-model="editorData"></ckeditor>
-      <div class="modal-footer">Functionality still under construction.</div>
-    </div>
-  </Transition>
+    </Transition>
 
-  <header class="header">
-    <img alt="Noizee" class="logo" src="./assets/logo.png" />
-    <div class="btn-editor-container">
-      <button @click="this.toggleModal()">Editor</button>
-    </div>
-  </header>
+    <header class="header">
+      <img
+        alt="Noizee"
+        class="logo"
+        src="./assets/logo.png"
+      />
+      <div class="btn-editor-container">
+        <button @click="this.toggleModal()">Editor</button>
+      </div>
+      <div class="btn-mute-container">
+        <button @click="this.muteAll()">Stop All Noises</button>
+      </div>
+    </header>
 
-  <main class="box-container">
-    <Noise
-      v-for="sound in soundList"
-      :key="sound.screenname"
-      :sound="{
-        filename: sound.filename,
-        screenname: sound.screenname,
-        icon: sound.icon,
-      }"
-    />
-  </main>
+    <main class="box-container">
+      <Noise
+        v-for="sound in soundList"
+        :key="sound.screenname"
+        :sound="{
+          filename: sound.filename,
+          screenname: sound.screenname,
+          icon: sound.icon,
+        }"
+      />
+    </main>
 
-  <footer class="footer">
-    <br />
-    <small class="text-1">
-      Icons by
-      <a target="_blank" href="https://www.flaticon.com/br/autores/eucalyp" title="Eucalyp">Eucalyp</a>
-      <br />Developed by
-      <a target="_blank" href="https://github.com/pedrocx486">pedroCX486</a>
+    <footer class="footer">
       <br />
-      <br />Issues playing? Our sounds are in MP3 format.
-      <br />Linux users may
-      need to install extra codecs to play them.
-    </small>
-  </footer>
+      <small class="text-1">
+        Icons by
+        <a
+          target="_blank"
+          href="https://www.flaticon.com/br/autores/eucalyp"
+          title="Eucalyp"
+        >
+          Eucalyp
+        </a>
+        <br />Developed by
+        <a
+          target="_blank"
+          href="https://github.com/pedrocx486"
+        >
+          pedroCX486
+        </a>
+        <br />
+        <br />Issues playing? Our sounds are in MP3 format.
+        <br />Linux users may need to install extra codecs to play them.
+      </small>
+    </footer>
+  </div>
 </template>
 
 <script>
 import Noise from "./components/Noise.vue";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 export default {
   name: "App",
   components: {
     Noise,
+    QuillEditor,
   },
   data() {
     return {
-      editor: ClassicEditor,
-      editorTitle: "",
-      editorData: "<p>Content of the editor.</p>",
       modalToggle: false,
+      editorTitle: "",
+      editorContent: "Your ideas.",
       soundList: [],
+      debounce: this.createDebounce(),
+      showSaved: false,
     };
   },
   methods: {
@@ -75,10 +124,63 @@ export default {
     },
     toggleModal() {
       this.modalToggle = !this.modalToggle;
-    }
+    },
+    muteAll() {
+      alert("Not implemented yet.");
+    },
+    storageSave() {
+      this.showSaved = true;
+      localStorage.setItem(
+        "noizeeTextEditor",
+        JSON.stringify({ title: this.editorTitle, content: this.editorContent })
+      );
+
+      setTimeout(() => {
+        this.showSaved = false;
+      }, 1000);
+    },
+    storageLoad() {
+      if (!!localStorage.getItem("noizeeTextEditor")) {
+        let storageData = JSON.parse(localStorage.getItem("noizeeTextEditor"));
+        this.editorTitle = storageData.title;
+        this.editorContent = storageData.content;
+      }
+    },
+    printFromEditor() {
+      const printWindow = window.open("", "Noizee", "height=720,width=1280");
+
+      printWindow.document.write(
+        "<html><head><title>" + this.editorTitle + "</title>"
+      );
+      printWindow.document.write("</head><body >");
+      printWindow.document.write("<h1>" + this.editorTitle + "</h1>");
+      printWindow.document.write(this.editorContent);
+      printWindow.document.write("</body></html>");
+
+      printWindow.document.close();
+      printWindow.focus();
+
+      printWindow.print();
+      printWindow.close();
+    },
+    resetEditor() {
+      this.editorTitle = "";
+      this.editorContent = "Your new ideas.";
+      this.storageSave();
+    },
+    createDebounce() {
+      let timeout = null;
+      return function (fnc, delayMs) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          fnc();
+        }, delayMs || 400);
+      };
+    },
   },
   created() {
     this.getSoundList();
+    this.storageLoad();
   },
 };
 </script>
@@ -107,6 +209,12 @@ export default {
 .btn-editor-container {
   position: absolute;
   left: 0.5rem;
+  top: 0.5rem;
+}
+
+.btn-mute-container {
+  position: absolute;
+  right: 0.5rem;
   top: 0.5rem;
 }
 
@@ -153,11 +261,20 @@ export default {
   font-weight: 600;
 }
 
+.modal-editor {
+  height: 24rem;
+}
+
 .modal-footer {
   background-color: white;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   padding: 0.5rem;
+  padding-top: 3rem;
   color: black;
+}
+
+.saved {
+  color: lightgray;
 }
 </style>

@@ -8,8 +8,10 @@ body {
 }
 
 /* CKEditor */
-.ck-editor__editable_inline {
-  min-height: 400px;
+.ql-container.ql-snow {
+  border: none !important;
+  overflow: hidden;
+  color: black;
 }
 
 /* Inputs */
