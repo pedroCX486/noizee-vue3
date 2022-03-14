@@ -8,13 +8,15 @@
             <close-thick class="md-normal-icon-size btn-animated btn-close" @click="this.toggleModal()"></close-thick>
           </div>
         </div>
-        <input
-          v-model="editorTitle"
-          type="text"
-          class="editor-title"
-          placeholder="Your title"
-          @keydown="debounce(() => { storageSave(); })"
-        />
+        <div class="modal-editor-title">
+          <input
+            v-model="editorTitle"
+            type="text"
+            class="editor-title"
+            placeholder="Your title"
+            @keydown="debounce(() => { storageSave(); })"
+          />
+        </div>
         <div class="modal-editor">
           <QuillEditor
             v-model:content="editorContent"
@@ -26,16 +28,20 @@
         <div class="modal-footer">
           <small>
             Content autosaves to the browser's local storage.
-          <Transition>
-            <span class="saved-hint" v-if="showSaved">Contents saved.</span>
-          </Transition>
           </small>
           <br/>
           <button class="custom-btn btn-info" @click="printFromEditor()">Print to File/Printer</button>
           &nbsp;
           <button class="custom-btn btn-danger" @click="resetEditor()">Reset Editor</button>
           &nbsp;
-          <div class="powered-by">Powered by <a href="https://vueup.github.io/vue-quill/">QuillEditor</a>.</div>
+          <div class="powered-by">
+            <small>
+            <Transition>
+              <span class="saved-hint" v-if="showSaved">Contents saved.</span>
+            </Transition>
+            Powered by <a href="https://vueup.github.io/vue-quill/">QuillEditor</a>.
+            </small>
+          </div>
         </div>
       </div>
     </Transition>
@@ -275,15 +281,21 @@ export default {
   font-weight: 600;
 }
 
+.modal-editor-title {
+  width: 100%;
+}
+
 .editor-title {
   border: none;
-  width: 97.9%;
   padding: 0.5rem;
   font-size: x-large;
+  width: -webkit-fill-available;
 }
 
 .modal-editor {
   height: 24rem;
+  background: white;
+  overflow: hidden;
 }
 
 .modal-footer {
@@ -303,6 +315,6 @@ export default {
 }
 
 .saved-hint {
-  color: gray;
+  color: rgb(202, 202, 202);
 }
 </style>
