@@ -3,9 +3,7 @@
 An port of [Noizee](https://github.com/pedroCX486/noizee) to Vue3, which itself was an opensource alternative to Noisli. 
 
 ## Project setup
-```
-yarn install
-```
+Simply use `yarn install`, also recommended is to use Volar instead of Vetur.
 
 ### Compiles and hot-reloads for development
 ```
