@@ -26,20 +26,18 @@
           />
         </div>
         <div class="modal-footer">
-          <small>
-            Content autosaves to the browser's local storage.
-          </small>
-          <br/>
+          <small>Content autosaves to the browser's local storage.</small>
+          <br />
           <button class="custom-btn btn-info" @click="printFromEditor()">Print to File/Printer</button>
           &nbsp;
           <button class="custom-btn btn-danger" @click="resetEditor()">Reset Editor</button>
           &nbsp;
           <div class="powered-by">
             <small>
-            <Transition>
-              <span class="saved-hint" v-if="showSaved">Contents saved.</span>
-            </Transition>
-            Powered by <a href="https://vueup.github.io/vue-quill/">QuillEditor</a>.
+              <Transition>
+                <span class="saved-hint" v-if="showSaved">Contents saved.</span>
+              </Transition>Powered by
+              <a href="https://vueup.github.io/vue-quill/">QuillEditor</a>.
             </small>
           </div>
         </div>
@@ -47,11 +45,7 @@
     </Transition>
 
     <header class="header">
-      <img
-        alt="Noizee"
-        class="logo"
-        src="./assets/logo.png"
-      />
+      <img alt="Noizee" class="logo" src="./assets/logo.png" />
       <div class="btn-editor-container">
         <pencil-outline class="md-normal-icon-size btn-animated btn-editor" @click="this.toggleModal()"></pencil-outline>
       </div>
@@ -76,13 +70,9 @@
       <br />
       <small class="text-1">
         Icons by
-        <a target="_blank" href="https://www.flaticon.com/br/autores/eucalyp" title="Eucalyp">
-          Eucalyp
-        </a>
+        <a target="_blank" href="https://www.flaticon.com/br/autores/eucalyp" title="Eucalyp">Eucalyp</a>
         <br />Developed by
-        <a target="_blank" href="https://github.com/pedrocx486">
-          pedroCX486
-        </a>
+        <a target="_blank" href="https://github.com/pedrocx486">pedroCX486</a>
         <br />
         <br />Issues playing? Our sounds are in MP3 format.
         <br />Linux users may need to install extra codecs to play them.
