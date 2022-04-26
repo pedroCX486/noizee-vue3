@@ -1,81 +1,69 @@
+<script setup lang="ts">
+import { ref, onMounted, inject } from 'vue'
+import { Play } from "mdue";
+
+const emitter: any = inject('emitter');
+
+const props = defineProps<{ sound: { filename: string, screenname: string, icon: string } }>()
+
+let isPlaying = ref(false);
+
+const volumeControls = () => {
+  (document.getElementById(props.sound.filename) as HTMLAudioElement).volume =
+    Number((document.getElementById(props.sound.filename + "-volume") as HTMLInputElement)!.value);
+}
+
+const audioControls = () => {
+  const soundElement = <HTMLAudioElement>document.getElementById(props.sound.filename)!;
+
+  if (soundElement.paused) {
+    volumeControls();
+    isPlaying.value = true;
+    soundElement.play();
+  } else {
+    isPlaying.value = false;
+    soundElement.pause();
+  }
+}
+
+const mute = () => {
+  if (isPlaying.value) {
+    audioControls();
+  }
+}
+
+onMounted(() => {
+  emitter.on("mute", () => {
+    mute();
+  });
+});
+</script>
+
 <template>
   <div class="sound-box">
-    <audio loop preload="none" :id="this.sound.filename">
-      <source v-bind:src="'./assets/sounds/' + this.sound.filename + '.mp3'" type="audio/mpeg" />
+    <audio loop preload="none" :id="sound.filename">
+      <source v-bind:src="'./assets/sounds/' + sound.filename + '.mp3'" type="audio/mpeg" />
     </audio>
 
-    <div @click="this.audioControls()">
-      <img v-bind:src="'./assets/icons/' + this.sound.icon" class="sound-icon" />
+    <div @click="audioControls()">
+      <img v-bind:src="'./assets/icons/' + sound.icon" class="sound-icon" />
       <br />
       <div class="audio-info">
-        <small class="text-1">{{ this.sound.screenname }}</small>&nbsp;
+        <small class="text-1">{{ sound.screenname }}</small>&nbsp;
         <div class="playing-icon-box">
           <Transition>
-            <play v-if="this.isPlaying" class="playing-icon md-normal-icon-size"></play>
+            <play v-if="isPlaying" class="playing-icon md-normal-icon-size"></play>
           </Transition>
         </div>
       </div>
       <br />
     </div>
-    <input
-      @input="this.volumeControls(this.sound.filename)"
-      type="range"
-      min="0"
-      max="1"
-      step="0.01"
-      value="0.30"
-      :id="this.sound.filename + '-volume'"
-      v-bind:title="'Volume Control for ' + this.sound.screenname"
-    />
+    <input @input="volumeControls(sound.filename)" type="range" min="0" max="1" step="0.01" value="0.30"
+      :id="sound.filename + '-volume'" v-bind:title="'Volume Control for ' + sound.screenname" />
   </div>
 </template>
 
-<script>
-import { Play } from "mdue";
-
-export default {
-  name: "Noise",
-  components: { Play },
-  props: {
-    sound: { filename: "", screennanme: "", icon: "" },
-  },
-  data() {
-    return {
-      isPlaying: false,
-    };
-  },
-  methods: {
-    volumeControls() {
-      document.getElementById(this.sound.filename).volume =
-        document.getElementById(this.sound.filename + "-volume").value;
-    },
-    audioControls() {
-      const soundElement = document.getElementById(this.sound.filename);
-
-      if (soundElement.paused) {
-        this.volumeControls();
-        this.isPlaying = true;
-        soundElement.play();
-      } else {
-        this.isPlaying = false;
-        soundElement.pause();
-      }
-    },
-    mute() {
-      if (this.isPlaying) {
-        this.audioControls();
-      }
-    },
-  },
-  mounted() {
-    this.emitter.on("mute", () => {
-      this.mute();
-    });
-  },
-};
-</script>
-
-<style>
+<style scoped>
 .audio-info {
   position: relative;
   display: inline-flex;

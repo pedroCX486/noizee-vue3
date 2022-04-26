@@ -1,28 +1,16 @@
-# Noizee (Vue3 Port)
+# Vue 3 + TypeScript + Vite
 
-An port of [Noizee](https://github.com/pedroCX486/noizee) to Vue3, which itself was an opensource alternative to Noisli. 
+This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-## Project setup
-Simply use `yarn install`, also recommended is to use Volar instead of Vetur.
+## Recommended IDE Setup
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
-### Compiles and minifies for production
-```
-yarn build
-```
+## Type Support For `.vue` Imports in TS
 
-## Contributing
+Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
 
-I'd rather not, but if you want open a PR.
+1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
+2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
 
-## License
-
-Code is licensed under the WTFPL. Icons are owned by the respective creator. Sound files I have no credits currently since I got on a torrent dump with not much info.
-
-## Live Version
-
-Here: http://pedrocx486.github.io/noizee/
+You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).

@@ -1,29 +1,109 @@
+<script setup lang="ts">
+import { ref, onMounted, inject } from 'vue'
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import { PencilOutline, CloseThick, VolumeOff } from "mdue";
+import Noise from './components/Noise.vue'
+
+const emitter: any = inject('emitter');
+
+let modalToggle = ref(false);
+let editorTitle = ref('');
+let editorContent = ref('Your ideas.');
+let soundList = ref([]);
+let showSaved = ref(false);
+
+const getSoundList = () => {
+  fetch("./assets/soundlist.json")
+    .then((response) => response.json())
+    .then((data) => {
+      soundList.value = data;
+    });
+}
+
+const toggleModal = () => {
+  modalToggle.value = !modalToggle.value;
+}
+
+const muteAll = () => {
+  emitter.emit("mute");
+}
+
+const storageSave = () => {
+  showSaved.value = true;
+  localStorage.setItem(
+    "noizeeTextEditor",
+    JSON.stringify({ title: editorTitle.value, content: editorContent.value })
+  );
+  setTimeout(() => {
+    showSaved.value = false;
+  }, 1000);
+}
+
+const storageLoad = () => {
+  if (!!localStorage.getItem("noizeeTextEditor")) {
+    let storageData = JSON.parse(localStorage.getItem("noizeeTextEditor"));
+    editorTitle.value = storageData.title;
+    editorContent.value = storageData.content;
+  }
+}
+
+const printFromEditor = () => {
+  const printWindow = window.open("", "Noizee", "height=720,width=1280");
+  printWindow.document.write(
+    "<html><head><title>" + editorTitle.value + "</title>"
+  );
+  printWindow.document.write("</head><body >");
+  printWindow.document.write("<h1>" + editorTitle.value + "</h1>");
+  printWindow.document.write(editorContent.value);
+  printWindow.document.write("</body></html>");
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+  printWindow.close();
+}
+
+const resetEditor = () => {
+  editorTitle.value = "";
+  editorContent.value = "Your new ideas.";
+  storageSave();
+}
+
+const createDebounce = () => {
+  let timeout = null;
+  return function (fnc: Function, delayMs: number) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      fnc();
+    }, delayMs || 400);
+  };
+}
+
+onMounted(() => {
+  getSoundList();
+  storageLoad();
+});
+
+let debounce = createDebounce();
+</script>
+
 <template>
-  <div id="app">
+  <div>
     <Transition>
-      <div v-if="this.modalToggle" class="modal">
+      <div v-if="modalToggle" class="modal">
         <div class="modal-header">
           <div class="modal-title">Text Editor</div>
           <div>
-            <close-thick class="md-normal-icon-size btn-animated btn-close" @click="this.toggleModal()"></close-thick>
+            <close-thick class="md-normal-icon-size btn-animated btn-close" @click="toggleModal()"></close-thick>
           </div>
         </div>
         <div class="modal-editor-title">
-          <input
-            v-model="editorTitle"
-            type="text"
-            class="editor-title"
-            placeholder="Your title"
-            @keydown="debounce(() => { storageSave(); })"
-          />
+          <input v-model="editorTitle" type="text" class="editor-title" placeholder="Your title"
+            @keydown="debounce(() => { storageSave(); })" />
         </div>
         <div class="modal-editor">
-          <QuillEditor
-            v-model:content="editorContent"
-            contentType="html"
-            @keydown="debounce(() => { storageSave(); })"
-            theme="snow"
-          />
+          <QuillEditor v-model:content="editorContent" contentType="html" @keydown="debounce(() => { storageSave(); })"
+            theme="snow" />
         </div>
         <div class="modal-footer">
           <small>Content autosaves to the browser's local storage.</small>
@@ -35,7 +115,7 @@
           <div class="powered-by">
             <small>
               <Transition>
-                <span class="saved-hint" v-if="showSaved">Contents saved.</span>
+                <span class="saved-hint" v-if="showSaved">Contents saved. &nbsp;</span>
               </Transition>Powered by
               <a href="https://vueup.github.io/vue-quill/">QuillEditor</a>.
             </small>
@@ -47,23 +127,20 @@
     <header class="header">
       <img alt="Noizee" class="logo" src="./assets/logo.png" />
       <div class="btn-editor-container">
-        <pencil-outline class="md-normal-icon-size btn-animated btn-editor" @click="this.toggleModal()"></pencil-outline>
+        <pencil-outline class="md-normal-icon-size btn-animated btn-editor" @click="toggleModal()">
+        </pencil-outline>
       </div>
       <div class="btn-mute-container">
-        <volume-off class="md-normal-icon-size btn-animated btn-mute" @click="this.muteAll()"></volume-off>
+        <volume-off class="md-normal-icon-size btn-animated btn-mute" @click="muteAll()"></volume-off>
       </div>
     </header>
 
     <main class="box-container">
-      <Noise
-        v-for="sound in soundList"
-        :key="sound.screenname"
-        :sound="{
-          filename: sound.filename,
-          screenname: sound.screenname,
-          icon: sound.icon,
-        }"
-      />
+      <Noise v-for="sound in soundList" :key="sound.screenname" :sound="{
+        filename: sound.filename,
+        screenname: sound.screenname,
+        icon: sound.icon,
+      }" />
     </main>
 
     <footer class="footer">
@@ -81,105 +158,7 @@
   </div>
 </template>
 
-<script>
-import Noise from "./components/Noise.vue";
-
-import { QuillEditor } from "@vueup/vue-quill";
-import "@vueup/vue-quill/dist/vue-quill.snow.css";
-
-import { PencilOutline, CloseThick, VolumeOff } from "mdue";
-
-export default {
-  name: "App",
-  components: {
-    Noise,
-    QuillEditor,
-    PencilOutline,
-    CloseThick,
-    VolumeOff,
-  },
-  data() {
-    return {
-      modalToggle: false,
-      editorTitle: "",
-      editorContent: "Your ideas.",
-      soundList: [],
-      debounce: this.createDebounce(),
-      showSaved: false,
-    };
-  },
-  methods: {
-    getSoundList() {
-      fetch("./assets/soundlist.json")
-        .then((response) => response.json())
-        .then((data) => {
-          this.soundList = data;
-        });
-    },
-    toggleModal() {
-      this.modalToggle = !this.modalToggle;
-    },
-    muteAll() {
-      this.emitter.emit("mute");
-    },
-    storageSave() {
-      this.showSaved = true;
-      localStorage.setItem(
-        "noizeeTextEditor",
-        JSON.stringify({ title: this.editorTitle, content: this.editorContent })
-      );
-
-      setTimeout(() => {
-        this.showSaved = false;
-      }, 1000);
-    },
-    storageLoad() {
-      if (!!localStorage.getItem("noizeeTextEditor")) {
-        let storageData = JSON.parse(localStorage.getItem("noizeeTextEditor"));
-        this.editorTitle = storageData.title;
-        this.editorContent = storageData.content;
-      }
-    },
-    printFromEditor() {
-      const printWindow = window.open("", "Noizee", "height=720,width=1280");
-
-      printWindow.document.write(
-        "<html><head><title>" + this.editorTitle + "</title>"
-      );
-      printWindow.document.write("</head><body >");
-      printWindow.document.write("<h1>" + this.editorTitle + "</h1>");
-      printWindow.document.write(this.editorContent);
-      printWindow.document.write("</body></html>");
-
-      printWindow.document.close();
-      printWindow.focus();
-
-      printWindow.print();
-      printWindow.close();
-    },
-    resetEditor() {
-      this.editorTitle = "";
-      this.editorContent = "Your new ideas.";
-      this.storageSave();
-    },
-    createDebounce() {
-      let timeout = null;
-      return function (fnc, delayMs) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          fnc();
-        }, delayMs || 400);
-      };
-    },
-  },
-  created() {
-    this.getSoundList();
-    this.storageLoad();
-  },
-};
-</script>
-
-<style scoped>
+<style>
 @import "./assets/base.css";
 
 .logo {
