@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject } from 'vue';
 import { Play } from "mdue";
 
 const emitter: any = inject('emitter');
 
-const props = defineProps<{ sound: { filename: string, screenname: string, icon: string } }>()
+const props = defineProps<{ sound: { filename: string, screenname: string, icon: string } }>();
 
 let isPlaying = ref(false);
 
