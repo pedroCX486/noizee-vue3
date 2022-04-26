@@ -3,7 +3,7 @@ import { ref, onMounted, inject } from 'vue'
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { PencilOutline, CloseThick, VolumeOff } from "mdue";
-import Noise from './components/Noise.vue'
+import Noise from './components/Noise.vue';
 
 const emitter: any = inject('emitter');
 
