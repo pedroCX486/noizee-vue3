@@ -278,8 +278,8 @@ let debounce = createDebounce();
 
 .powered-by {
   text-align: right;
-  position: absolute;
-  bottom: -6rem;
+  position: relative;
+  bottom: 1rem;
   right: 1rem;
 }
 
