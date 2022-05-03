@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject } from "vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { PencilOutline, CloseThick, VolumeOff } from "mdue";
-import Noise from './components/Noise.vue';
+import Noise from "./components/Noise.vue";
 
-const emitter: any = inject('emitter');
+const emitter: any = inject("emitter");
 
 let modalToggle = ref(false);
-let editorTitle = ref('');
-let editorContent = ref('Your ideas.');
+let editorTitle = ref("");
+let editorContent = ref("Your ideas.");
 let soundList = ref([]);
 let showSaved = ref(false);
 
@@ -19,15 +19,15 @@ const getSoundList = () => {
     .then((data) => {
       soundList.value = data;
     });
-}
+};
 
 const toggleModal = () => {
   modalToggle.value = !modalToggle.value;
-}
+};
 
 const muteAll = () => {
   emitter.emit("mute");
-}
+};
 
 const storageSave = () => {
   showSaved.value = true;
@@ -38,7 +38,7 @@ const storageSave = () => {
   setTimeout(() => {
     showSaved.value = false;
   }, 1000);
-}
+};
 
 const storageLoad = () => {
   if (!!localStorage.getItem("noizeeTextEditor")) {
@@ -46,7 +46,7 @@ const storageLoad = () => {
     editorTitle.value = storageData.title;
     editorContent.value = storageData.content;
   }
-}
+};
 
 const printFromEditor = () => {
   const printWindow = window.open("", "Noizee", "height=720,width=1280");
@@ -61,13 +61,13 @@ const printFromEditor = () => {
   printWindow.focus();
   printWindow.print();
   printWindow.close();
-}
+};
 
 const resetEditor = () => {
   editorTitle.value = "";
   editorContent.value = "Your new ideas.";
   storageSave();
-}
+};
 
 const createDebounce = () => {
   let timeout = null;
@@ -77,7 +77,7 @@ const createDebounce = () => {
       fnc();
     }, delayMs || 400);
   };
-}
+};
 
 onMounted(() => {
   getSoundList();
@@ -94,29 +94,55 @@ let debounce = createDebounce();
         <div class="modal-header">
           <div class="modal-title">Text Editor</div>
           <div>
-            <close-thick class="md-normal-icon-size btn-animated btn-close" @click="toggleModal()"></close-thick>
+            <close-thick
+              class="md-normal-icon-size btn-animated btn-close"
+              @click="toggleModal()"
+            ></close-thick>
           </div>
         </div>
         <div class="modal-editor-title">
-          <input v-model="editorTitle" type="text" class="editor-title" placeholder="Your title"
-            @keydown="debounce(() => { storageSave(); })" />
+          <input
+            v-model="editorTitle"
+            type="text"
+            class="editor-title"
+            placeholder="Your title"
+            @keydown="
+              debounce(() => {
+                storageSave();
+              })
+            "
+          />
         </div>
         <div class="modal-editor">
-          <QuillEditor v-model:content="editorContent" contentType="html" @keydown="debounce(() => { storageSave(); })"
-            theme="snow" />
+          <QuillEditor
+            v-model:content="editorContent"
+            contentType="html"
+            @keydown="
+              debounce(() => {
+                storageSave();
+              })
+            "
+            theme="snow"
+          />
         </div>
         <div class="modal-footer">
           <small>Content autosaves to the browser's local storage.</small>
           <br />
-          <button class="custom-btn btn-info" @click="printFromEditor()">Print to File/Printer</button>
+          <button class="custom-btn btn-info" @click="printFromEditor()">
+            Print to File/Printer
+          </button>
           &nbsp;
-          <button class="custom-btn btn-danger" @click="resetEditor()">Reset Editor</button>
+          <button class="custom-btn btn-danger" @click="resetEditor()">
+            Reset Editor
+          </button>
           &nbsp;
           <div class="powered-by">
             <small>
               <Transition>
-                <span class="saved-hint" v-if="showSaved">Contents saved. &nbsp;</span>
-              </Transition>Powered by
+                <span class="saved-hint" v-if="showSaved"
+                  >Contents saved. &nbsp;</span
+                > </Transition
+              >Powered by
               <a href="https://vueup.github.io/vue-quill/">QuillEditor</a>.
             </small>
           </div>
@@ -127,32 +153,47 @@ let debounce = createDebounce();
     <header class="header">
       <img alt="Noizee" class="logo" src="./assets/logo.png" />
       <div class="btn-editor-container">
-        <pencil-outline class="md-normal-icon-size btn-animated btn-editor" @click="toggleModal()">
+        <pencil-outline
+          class="md-normal-icon-size btn-animated btn-editor"
+          @click="toggleModal()"
+        >
         </pencil-outline>
       </div>
       <div class="btn-mute-container">
-        <volume-off class="md-normal-icon-size btn-animated btn-mute" @click="muteAll()"></volume-off>
+        <volume-off
+          class="md-normal-icon-size btn-animated btn-mute"
+          @click="muteAll()"
+        ></volume-off>
       </div>
     </header>
 
     <main class="box-container">
-      <Noise v-for="sound in soundList" :key="sound.screenname" :sound="{
-        filename: sound.filename,
-        screenname: sound.screenname,
-        icon: sound.icon,
-      }" />
+      <Noise
+        v-for="sound in soundList"
+        :key="sound.screenname"
+        :sound="{
+          filename: sound.filename,
+          screenname: sound.screenname,
+          icon: sound.icon,
+        }"
+      />
     </main>
 
     <footer class="footer">
       <br />
       <small class="text-1">
         Icons by
-        <a target="_blank" href="https://www.flaticon.com/br/autores/eucalyp" title="Eucalyp">Eucalyp</a>
+        <a
+          target="_blank"
+          href="https://www.flaticon.com/br/autores/eucalyp"
+          title="Eucalyp"
+          >Eucalyp</a
+        >
         <br />Developed by
         <a target="_blank" href="https://github.com/pedrocx486">pedroCX486</a>
         <br />
-        <br />Issues playing? Our sounds are in MP3 format.
-        <br />Linux users may need to install extra codecs to play them.
+        <br />Issues playing? Our sounds are in MP3 format. <br />Linux users
+        may need to install extra codecs to play them.
       </small>
     </footer>
   </div>
