@@ -8,7 +8,7 @@ const props = defineProps<{
   sound: { filename: string; screenname: string; icon: string };
 }>();
 
-const AudioContext = window.AudioContext || window.webkitAudioContext; // This will error out on VSCode, but it's for WebKit compat.
+const AudioContext = window.AudioContext;
 
 let audioElement;
 let audioCtx;
