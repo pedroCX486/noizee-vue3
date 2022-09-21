@@ -8,29 +8,39 @@ const props = defineProps<{
   sound: { filename: string; screenname: string; icon: string };
 }>();
 
+const AudioContext = window.AudioContext || window.webkitAudioContext; // This will error out on VSCode, but it's for WebKit compat.
+
+let audioElement;
+let audioCtx;
+let track;
+let gainNode;
+
 let isPlaying = ref(false);
 
 const volumeControls = () => {
-  (document.getElementById(props.sound.filename) as HTMLAudioElement).volume =
-    Number(
-      (document.getElementById(
-        props.sound.filename + "-volume"
-      ) as HTMLInputElement)!.value
-    );
+  const volumeControl = (document.getElementById(props.sound.filename + "-volume") as HTMLInputElement);
+
+  volumeControl.addEventListener('input', (e) => {
+    gainNode.gain.value = (e.target as HTMLInputElement).value;
+  }, false);
 };
 
 const audioControls = () => {
-  const soundElement = <HTMLAudioElement>(
-    document.getElementById(props.sound.filename)!
-  );
+  if (!track) {
+    audioCtx = new AudioContext();
+    track = audioCtx.createMediaElementSource(audioElement);
+    gainNode = audioCtx.createGain();
+    track.connect(gainNode).connect(audioCtx.destination);
+    audioCtx.resume();
+  }
 
-  if (soundElement.paused) {
+  if (audioElement.paused) {
     volumeControls();
     isPlaying.value = true;
-    soundElement.play();
+    audioElement.play();
   } else {
     isPlaying.value = false;
-    soundElement.pause();
+    audioElement.pause();
   }
 };
 
@@ -41,6 +51,8 @@ const mute = () => {
 };
 
 onMounted(() => {
+  audioElement = audioElement = document.querySelector('#' + props.sound.filename);
+
   emitter.on("mute", () => {
     mute();
   });
@@ -50,39 +62,24 @@ onMounted(() => {
 <template>
   <div class="sound-box">
     <audio loop preload="none" :id="sound.filename">
-      <source
-        v-bind:src="'./assets/sounds/' + sound.filename + '.mp3'"
-        type="audio/mpeg"
-      />
+      <source v-bind:src="'./assets/sounds/' + sound.filename + '.mp3'" type="audio/mpeg" />
     </audio>
 
     <div @click="audioControls()">
       <img v-bind:src="'./assets/icons/' + sound.icon" class="sound-icon" />
       <br />
       <div class="audio-info">
-        <small class="text-1">{{ sound.screenname }}</small
-        >&nbsp;
+        <small class="text-1">{{ sound.screenname }}</small>&nbsp;
         <div class="playing-icon-box">
           <Transition>
-            <play
-              v-if="isPlaying"
-              class="playing-icon md-normal-icon-size"
-            ></play>
+            <play v-if="isPlaying" class="playing-icon md-normal-icon-size"></play>
           </Transition>
         </div>
       </div>
       <br />
     </div>
-    <input
-      @input="volumeControls(sound.filename)"
-      type="range"
-      min="0"
-      max="1"
-      step="0.01"
-      value="0.30"
-      :id="sound.filename + '-volume'"
-      v-bind:title="'Volume Control for ' + sound.screenname"
-    />
+    <input @input="volumeControls()" type="range" min="0" max="1" step="0.01" value="0.30"
+      :id="sound.filename + '-volume'" v-bind:title="'Volume Control for ' + sound.screenname" />
   </div>
 </template>
 

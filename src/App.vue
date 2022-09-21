@@ -71,7 +71,7 @@ const resetEditor = () => {
 
 const createDebounce = () => {
   let timeout = null;
-  return function (fnc: Function, delayMs: number) {
+  return function (fnc: Function, delayMs?: number) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       fnc();
