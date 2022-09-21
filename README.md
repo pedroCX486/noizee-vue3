@@ -22,7 +22,3 @@ I'd rather not, but if you want open a PR.
 ## License
 
 Code is licensed under the WTFPL. Icons are owned by the respective creator. Sound files I have no credits currently since I got on a torrent dump with not much info.
-
-## Live Version
-
-Here: http://pedrocx486.github.io/noizee/
