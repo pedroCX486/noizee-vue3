@@ -8,20 +8,18 @@ const props = defineProps<{
   sound: { filename: string; screenname: string; icon: string };
 }>();
 
-const AudioContext = window.AudioContext;
-
-let audioElement;
-let audioCtx;
-let track;
-let gainNode;
-
 let isPlaying = ref(false);
+let soundVolume = ref(0.30);
+
+let audioElement: HTMLAudioElement;
+let volumeControl: HTMLInputElement;
+let audioCtx: AudioContext;
+let track: MediaElementAudioSourceNode;
+let gainNode: GainNode;
 
 const volumeControls = () => {
-  const volumeControl = (document.getElementById(props.sound.filename + "-volume") as HTMLInputElement);
-
   volumeControl.addEventListener('input', (e) => {
-    gainNode.gain.value = (e.target as HTMLInputElement).value;
+    gainNode.gain.value = Number((e.target as HTMLInputElement).value);
   }, false);
 };
 
@@ -30,6 +28,7 @@ const audioControls = () => {
     audioCtx = new AudioContext();
     track = audioCtx.createMediaElementSource(audioElement);
     gainNode = audioCtx.createGain();
+    gainNode.gain.value = soundVolume.value;
     track.connect(gainNode).connect(audioCtx.destination);
     audioCtx.resume();
   }
@@ -51,7 +50,8 @@ const mute = () => {
 };
 
 onMounted(() => {
-  audioElement = audioElement = document.querySelector('#' + props.sound.filename);
+  audioElement = (document.getElementById(props.sound.filename) as HTMLAudioElement);
+  volumeControl = (document.getElementById(props.sound.filename + "-volume") as HTMLInputElement);
 
   emitter.on("mute", () => {
     mute();
@@ -78,7 +78,7 @@ onMounted(() => {
       </div>
       <br />
     </div>
-    <input @input="volumeControls()" type="range" min="0" max="1" step="0.01" value="0.30"
+    <input @input="volumeControls()" type="range" min="0" max="1" step="0.01" :value="soundVolume"
       :id="sound.filename + '-volume'" v-bind:title="'Volume Control for ' + sound.screenname" />
   </div>
 </template>
