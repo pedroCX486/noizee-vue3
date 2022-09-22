@@ -62,11 +62,11 @@ onMounted(() => {
 <template>
   <div class="sound-box">
     <audio loop preload="none" :id="sound.filename">
-      <source v-bind:src="'./assets/sounds/' + sound.filename + '.mp3'" type="audio/mpeg" />
+      <source :src="'./assets/sounds/' + sound.filename + '.mp3'" type="audio/mpeg" />
     </audio>
 
     <div @click="audioControls()">
-      <img v-bind:src="'./assets/icons/' + sound.icon" class="sound-icon" />
+      <img :src="'./assets/icons/' + sound.icon" class="sound-icon" />
       <br />
       <div class="audio-info">
         <small class="text-1">{{ sound.screenname }}</small>&nbsp;
