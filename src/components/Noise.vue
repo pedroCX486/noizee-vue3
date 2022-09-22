@@ -19,7 +19,9 @@ let gainNode: GainNode;
 
 const volumeControls = () => {
   volumeControl.addEventListener('input', (e) => {
-    gainNode.gain.value = Number((e.target as HTMLInputElement).value);
+    if (gainNode) {
+      gainNode.gain.value = Number((e.target as HTMLInputElement).value);
+    }
   }, false);
 };
 
