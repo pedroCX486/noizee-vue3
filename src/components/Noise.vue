@@ -79,7 +79,7 @@ onMounted(() => {
       <br />
     </div>
     <input @input="volumeControls()" type="range" min="0" max="1" step="0.01" :value="soundVolume"
-      :id="sound.filename + '-volume'" v-bind:title="'Volume Control for ' + sound.screenname" />
+      :id="sound.filename + '-volume'" :title="'Volume Control for ' + sound.screenname" />
   </div>
 </template>
 
