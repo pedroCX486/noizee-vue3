@@ -64,7 +64,10 @@ onMounted(() => {
       <small class="text-1">
         Icons by
         <a target="_blank" href="https://www.flaticon.com/br/autores/eucalyp" title="Eucalyp">Eucalyp</a>
-        <br />Developed by
+        <br />
+        Sounds by unknown
+        <br />
+        Developed by
         <a target="_blank" href="https://github.com/pedrocx486">pedroCX486</a>
         <br />
         <br />Issues playing? Our sounds are in MP3 format. <br />Linux users
