@@ -9,15 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vueup/vue-quill": "^1.0.0-beta.8",
+    "@vueup/vue-quill": "^1.0.0-beta.10",
     "mdue": "^0.1.4",
     "mitt": "^3.0.0",
-    "vue": "^3.2.25"
+    "vue": "^3.2.39"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.1",
-    "typescript": "^4.5.4",
-    "vite": "^2.9.5",
-    "vue-tsc": "^0.34.7"
+    "@vitejs/plugin-vue": "^3.1.0",
+    "typescript": "^4.8.3",
+    "vite": "^3.1.3",
+    "vue-tsc": "^0.40.13"
   }
 }
